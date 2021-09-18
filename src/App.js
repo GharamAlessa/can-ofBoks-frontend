@@ -6,12 +6,15 @@ import BestBooks from "./BestBooks";
 import Login from "./Login";
 import Profile from "./Profile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import AddBookButton from "./AddBookButton";
+import Button from 'react-bootstrap/Button'
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       user: null,
+      show:false
     };
   }
 
@@ -26,6 +29,22 @@ class App extends React.Component {
       user: null,
     });
   };
+  onShow=()=>{
+    this.setState({ 
+      show: true
+    })
+  }
+  modalHide=()=>{
+    this.setState({ 
+      show: false
+    })
+  }
+
+bookAddingHandler = (result)=>{
+this.setState({
+  update:result
+})
+}
 
   render() {
     return (
@@ -35,7 +54,13 @@ class App extends React.Component {
           <Switch>
             <Route exact path="/">
               {this.state.user ? (
-                <BestBooks user={this.state.user} />
+                <>
+             <Button onClick={this.onShow}>
+               Add Book 
+             </Button >
+                  <AddBookButton bookAddingHandler={this.bookAddingHandler}  user={this.state.user} show={this.state.show} modalHide={this.modalHide}/>
+                  <BestBooks update={this.state.update} user={this.state.user} />
+                </>
               ) : (
                 <Login onLogin={this.loginHandler} />
               )}

@@ -1,5 +1,5 @@
 import React from "react";
-import Carousel from 'react-bootstrap/Carousel'
+import Carousel from "react-bootstrap/Carousel";
 import axios from "axios";
 
 class BestBooks extends React.Component {
@@ -13,12 +13,26 @@ class BestBooks extends React.Component {
   /* TODO: Make a GET request to your API to fetch books for the logged in user  */
   componentDidMount = () => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/books?email=${this.props.user.email}`)
+      .get(
+        `${process.env.REACT_APP_API_URL}/books?email=${this.props.user.email}`
+      )
       .then((bookResponse) => {
         this.setState({ bookData: bookResponse.data });
-        console.log(this.state.bookData);
       })
       .catch((error) => alert(error.message));
+  };
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevProps.update != this.props.update) {
+      axios
+        .get(
+          `${process.env.REACT_APP_API_URL}/books?email=${this.props.user.email}`
+        )
+        .then((bookResponse) => {
+          this.setState({ bookData: bookResponse.data });
+        })
+        .catch((error) => alert(error.message));
+    }
   };
 
   render() {
@@ -35,7 +49,7 @@ class BestBooks extends React.Component {
                     src="https://www.urbansplash.co.uk/images/placeholder-16-9.jpg"
                     alt="First slide"
                   />
-                  <Carousel.Caption > 
+                  <Carousel.Caption>
                     <h3 className="text-dark">{book.title}</h3>
                     <p className="text-dark">{book.description}</p>
                     <h4 className="text-dark">{book.status}</h4>
